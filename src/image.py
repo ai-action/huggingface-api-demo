@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 from huggingface_hub import InferenceClient
 from PIL import Image
@@ -10,6 +11,8 @@ def generate_image(
     model: str,
     guidance_scale: float = 8,
     seed: int = 42,
+    width: int | None = None,
+    height: int | None = None,
     use_cache: bool = True,
     output_path: str | Path | None = None,
 ) -> Image.Image:
@@ -26,6 +29,8 @@ def generate_image(
         model: Hugging Face model ID for a text-to-image model.
         guidance_scale: How closely the image should follow the prompt.
         seed: Random seed for reproducible generation.
+        width: Width of the generated image in pixels.
+        height: Height of the generated image in pixels.
         use_cache: Whether to use the inference cache. Set to ``False`` to
             force a new generation with the same payload.
         output_path: Optional path to save the generated image to.
@@ -36,12 +41,18 @@ def generate_image(
     if not use_cache:
         client.headers["x-use-cache"] = "0"
 
-    image = client.text_to_image(
-        prompt=prompt,
-        model=model,
-        guidance_scale=guidance_scale,
-        seed=seed,
-    )
+    kwargs: dict[str, Any] = {
+        "prompt": prompt,
+        "model": model,
+        "guidance_scale": guidance_scale,
+        "seed": seed,
+    }
+    if width is not None:
+        kwargs["width"] = width
+    if height is not None:
+        kwargs["height"] = height
+
+    image = client.text_to_image(**kwargs)
 
     if output_path:
         path = Path(output_path)

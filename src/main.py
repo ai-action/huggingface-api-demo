@@ -33,6 +33,18 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Random seed for reproducible generation",
     )
     parser.add_argument(
+        "--width",
+        type=int,
+        default=None,
+        help="Width of the generated image in pixels",
+    )
+    parser.add_argument(
+        "--height",
+        type=int,
+        default=None,
+        help="Height of the generated image in pixels",
+    )
+    parser.add_argument(
         "--output",
         "-o",
         default=None,
@@ -68,6 +80,8 @@ def main(argv: list[str] | None = None) -> None:
         model=args.model,
         guidance_scale=args.guidance_scale,
         seed=args.seed,
+        width=args.width,
+        height=args.height,
         use_cache=args.cache,
         output_path=output_path,
     )

@@ -26,6 +26,14 @@ on:
         required: false
         default: true
         type: boolean
+      width:
+        description: Width of the generated image in pixels
+        required: false
+        type: number
+      height:
+        description: Height of the generated image in pixels
+        required: false
+        type: number
 
 permissions:
   actions: write
@@ -47,17 +55,24 @@ jobs:
       - name: Generate image
         run: |
           mkdir -p outputs
-          uv run src/main.py "$PROMPT" \
-            --model "$MODEL" \
-            --guidance-scale "$GUIDANCE_SCALE" \
-            --seed "$SEED" \
-            ${{ inputs.cache && '--cache' || '--no-cache' }} \
+          args=(
+            "$PROMPT"
+            --model "$MODEL"
+            --guidance-scale "$GUIDANCE_SCALE"
+            --seed "$SEED"
+            ${{ inputs.cache && '--cache' || '--no-cache' }}
             --output outputs/output.png
+          )
+          [ -n "$WIDTH" ] && args+=(--width "$WIDTH")
+          [ -n "$HEIGHT" ] && args+=(--height "$HEIGHT")
+          uv run src/main.py "${args[@]}"
         env:
           PROMPT: ${{ inputs.prompt }}
           MODEL: ${{ inputs.model }}
           GUIDANCE_SCALE: ${{ inputs.guidance_scale }}
           SEED: ${{ inputs.seed }}
+          WIDTH: ${{ inputs.width }}
+          HEIGHT: ${{ inputs.height }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
 
       - name: Upload image artifact

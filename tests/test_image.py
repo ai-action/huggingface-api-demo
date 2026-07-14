@@ -44,3 +44,19 @@ def test_generate_image_adds_png_extension(tmp_path: Path) -> None:
     generate_image(client, "a prompt", "model/id", output_path=output)
 
     assert (tmp_path / "generated_image.png").exists()
+
+
+def test_generate_image_passes_width_and_height() -> None:
+    client: Any = MagicMock()
+    client.text_to_image.return_value = Image.new("RGB", (64, 64))
+
+    generate_image(client, "a prompt", "model/id", width=512, height=768)
+
+    client.text_to_image.assert_called_once_with(
+        prompt="a prompt",
+        model="model/id",
+        guidance_scale=8,
+        seed=42,
+        width=512,
+        height=768,
+    )

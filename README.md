@@ -62,6 +62,17 @@ uv run src/main.py "Astronaut riding a horse in space" \
   --no-cache
 ```
 
+### Set image size
+
+Pass `--width` and `--height` (in pixels). Model default sizes are used if omitted:
+
+```sh
+uv run src/main.py "Astronaut riding a horse in space" \
+  --model stabilityai/stable-diffusion-xl-base-1.0 \
+  --width 1024 \
+  --height 1024
+```
+
 ## License
 
 [MIT](https://github.com/ai-action/huggingface-api-demo/blob/main/LICENSE)

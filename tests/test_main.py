@@ -17,6 +17,8 @@ def test_parse_args_defaults() -> None:
     assert args.model == "stabilityai/stable-diffusion-xl-base-1.0"
     assert args.guidance_scale == 8
     assert args.seed == 42
+    assert args.width is None
+    assert args.height is None
     assert args.output is None
     assert args.cache is True
     assert args.token is None
@@ -32,6 +34,10 @@ def test_parse_args_overrides() -> None:
             "4",
             "--seed",
             "1",
+            "--width",
+            "512",
+            "--height",
+            "768",
             "--output",
             "cat.png",
             "--no-cache",
@@ -43,6 +49,8 @@ def test_parse_args_overrides() -> None:
     assert args.model == "model/id"
     assert args.guidance_scale == 4
     assert args.seed == 1
+    assert args.width == 512
+    assert args.height == 768
     assert args.output == "cat.png"
     assert args.cache is False
     assert args.token == "secret"
@@ -72,6 +80,8 @@ def test_main_runs_with_defaults(
     assert call_kwargs["model"] == "stabilityai/stable-diffusion-xl-base-1.0"
     assert call_kwargs["guidance_scale"] == 8
     assert call_kwargs["seed"] == 42
+    assert call_kwargs["width"] is None
+    assert call_kwargs["height"] is None
     assert call_kwargs["use_cache"] is True
     assert re.fullmatch(r"output_[0-9a-f]{32}\.png", call_kwargs["output_path"])
 
