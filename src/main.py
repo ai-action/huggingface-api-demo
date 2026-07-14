@@ -36,12 +36,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         "--output",
         "-o",
         default=None,
-        help="Output image path (default: output_<timestamp>.png)",
+        help="Output image path (default: output_<uuid>.png)",
     )
     parser.add_argument(
-        "--no-cache",
-        action="store_true",
-        help="Disable inference response caching",
+        "--cache",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Use inference response caching (default: True)",
     )
     parser.add_argument(
         "--token",
@@ -67,7 +68,7 @@ def main(argv: list[str] | None = None) -> None:
         model=args.model,
         guidance_scale=args.guidance_scale,
         seed=args.seed,
-        use_cache=not args.no_cache,
+        use_cache=args.cache,
         output_path=output_path,
     )
     print(f"Saved image to {output_path} (prompt: {args.prompt!r})")

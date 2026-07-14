@@ -18,7 +18,7 @@ def test_parse_args_defaults() -> None:
     assert args.guidance_scale == 8
     assert args.seed == 42
     assert args.output is None
-    assert args.no_cache is False
+    assert args.cache is True
     assert args.token is None
 
 
@@ -44,7 +44,7 @@ def test_parse_args_overrides() -> None:
     assert args.guidance_scale == 4
     assert args.seed == 1
     assert args.output == "cat.png"
-    assert args.no_cache is True
+    assert args.cache is False
     assert args.token == "secret"
 
 
