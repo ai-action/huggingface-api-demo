@@ -1,0 +1,67 @@
+name: generate-image
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: Text prompt for the image (e.g. Astronaut riding a horse in space)
+        required: true
+        type: string
+      model:
+        description: Hugging Face model ID (e.g. stabilityai/stable-diffusion-xl-base-1.0)
+        required: true
+        type: string
+      guidance_scale:
+        description: Guidance scale for image generation (higher = follow prompt more closely; lower = more creative)
+        required: false
+        default: 8
+        type: number
+      seed:
+        description: Random seed for reproducible generation
+        required: false
+        default: 42
+        type: number
+      cache:
+        description: Use inference response caching
+        required: false
+        default: true
+        type: boolean
+      output:
+        description: Output image filename (optional)
+        required: false
+        type: string
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Generate image
+        run: |
+          uv run src/main.py "${{ inputs.prompt }}" \
+            --model "${{ inputs.model }}" \
+            --guidance-scale "${{ inputs.guidance_scale }}" \
+            --seed "${{ inputs.seed }}" \
+            ${{ inputs.cache && '--cache' || '--no-cache' }} \
+            ${{ inputs.output && format('--output "{0}"', inputs.output) || '' }}
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-image
+          path: output_*.png
+          if-no-files-found: error
