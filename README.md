@@ -45,16 +45,18 @@ uv run src/main.py
 
 This will generate an `output.png` image using the `stabilityai/stable-diffusion-xl-base-1.0` model.
 
+Available options:
+
+```sh
+uv run src/main.py --help
+```
+
 ### Disable caching
 
-The `InferenceClient` caches responses by default. To force a new generation with the same prompt, pass `use_cache=False`:
+The `InferenceClient` caches responses by default. To force a new generation with the same prompt, pass `--no-cache`:
 
-```py
-from client import get_client
-from image import generate_image
-
-client = get_client()
-generate_image(client, prompt="Astronaut riding a horse", use_cache=False, output_path="output.png")
+```sh
+uv run src/main.py --no-cache
 ```
 
 ## License
