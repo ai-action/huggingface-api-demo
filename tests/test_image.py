@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 from PIL import Image
 
-from image import DEFAULT_MODEL, generate_image
+from image import generate_image
 
 
 def test_generate_image_caches_by_default(tmp_path: Path) -> None:
@@ -13,11 +13,11 @@ def test_generate_image_caches_by_default(tmp_path: Path) -> None:
     client.text_to_image.return_value = fake_image
     output = tmp_path / "out.png"
 
-    result = generate_image(client, "a prompt", output_path=output)
+    result = generate_image(client, "a prompt", "model/id", output_path=output)
 
     client.text_to_image.assert_called_once_with(
         prompt="a prompt",
-        model=DEFAULT_MODEL,
+        model="model/id",
         guidance_scale=8,
         seed=42,
     )
@@ -30,6 +30,6 @@ def test_generate_image_can_disable_cache() -> None:
     client.headers = cast(dict[str, str], {})
     client.text_to_image.return_value = Image.new("RGB", (64, 64))
 
-    generate_image(client, "a prompt", use_cache=False)
+    generate_image(client, "a prompt", "model/id", use_cache=False)
 
     assert client.headers["x-use-cache"] == "0"

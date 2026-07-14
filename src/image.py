@@ -3,13 +3,11 @@ from pathlib import Path
 from huggingface_hub import InferenceClient
 from PIL import Image
 
-DEFAULT_MODEL = "stabilityai/stable-diffusion-xl-base-1.0"
-
 
 def generate_image(
     client: InferenceClient,
     prompt: str,
-    model: str = DEFAULT_MODEL,
+    model: str,
     guidance_scale: float = 8,
     seed: int = 42,
     use_cache: bool = True,

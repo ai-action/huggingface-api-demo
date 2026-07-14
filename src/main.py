@@ -1,24 +1,23 @@
 import argparse
+import uuid
 
 from client import get_client
-from image import DEFAULT_MODEL, generate_image
+from image import generate_image
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """Parse command-line arguments for the image generation demo."""
     parser = argparse.ArgumentParser(
-        description="Generate an image with Stable Diffusion",
+        description="Generate an image using a Hugging Face text-to-image model",
     )
     parser.add_argument(
-        "--prompt",
-        "-p",
-        default="Astronaut riding a horse in space",
+        "prompt",
         help="Text prompt for the image",
     )
     parser.add_argument(
         "--model",
         "-m",
-        default=DEFAULT_MODEL,
+        required=True,
         help="Hugging Face model ID",
     )
     parser.add_argument(
@@ -36,8 +35,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--output",
         "-o",
-        default="output.png",
-        help="Output image path",
+        default=None,
+        help="Output image path (default: output_<timestamp>.png)",
     )
     parser.add_argument(
         "--no-cache",
@@ -52,9 +51,15 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def _default_output_path() -> str:
+    """Return an output filename with a UUID."""
+    return f"output_{uuid.uuid4().hex}.png"
+
+
 def main(argv: list[str] | None = None) -> None:
-    """Run the Stable Diffusion image generation demo."""
+    """Run the image generation demo."""
     args = parse_args(argv)
+    output_path = args.output or _default_output_path()
     client = get_client(args.token)
     generate_image(
         client,
@@ -63,9 +68,9 @@ def main(argv: list[str] | None = None) -> None:
         guidance_scale=args.guidance_scale,
         seed=args.seed,
         use_cache=not args.no_cache,
-        output_path=args.output,
+        output_path=output_path,
     )
-    print(f"Saved image to {args.output} (prompt: {args.prompt!r})")
+    print(f"Saved image to {output_path} (prompt: {args.prompt!r})")
 
 
 if __name__ == "__main__":  # pragma: no cover

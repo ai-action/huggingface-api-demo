@@ -5,7 +5,7 @@
 
 🤗 Hugging Face [Serverless Inference API](https://huggingface.co/learn/cookbook/enterprise_hub_serverless_inference_api) demo.
 
-This project demonstrates how to generate images with Stable Diffusion using the Serverless Inference API and the [`huggingface_hub`](https://huggingface.co/docs/huggingface_hub) Python library.
+This project demonstrates how to generate images with text-to-image models (e.g. Stable Diffusion) using the Serverless Inference API and the [`huggingface_hub`](https://huggingface.co/docs/huggingface_hub) Python library.
 
 It follows the [Creating Images with Stable Diffusion](https://huggingface.co/learn/cookbook/enterprise_hub_serverless_inference_api#2-creating-images-with-stable-diffusion) section of the cookbook.
 
@@ -40,10 +40,11 @@ export HF_TOKEN=<your_huggingface_token>
 Run the demo:
 
 ```sh
-uv run src/main.py
+uv run src/main.py "Astronaut riding a horse in space" \
+  --model stabilityai/stable-diffusion-xl-base-1.0
 ```
 
-This will generate an `output.png` image using the `stabilityai/stable-diffusion-xl-base-1.0` model.
+This will generate an `output_<uuid>.png` image.
 
 Available options:
 
@@ -56,7 +57,9 @@ uv run src/main.py --help
 The `InferenceClient` caches responses by default. To force a new generation with the same prompt, pass `--no-cache`:
 
 ```sh
-uv run src/main.py --no-cache
+uv run src/main.py "Astronaut riding a horse in space" \
+  --model stabilityai/stable-diffusion-xl-base-1.0 \
+  --no-cache
 ```
 
 ## License
