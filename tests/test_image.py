@@ -33,3 +33,14 @@ def test_generate_image_can_disable_cache() -> None:
     generate_image(client, "a prompt", "model/id", use_cache=False)
 
     assert client.headers["x-use-cache"] == "0"
+
+
+def test_generate_image_adds_png_extension(tmp_path: Path) -> None:
+    client: Any = MagicMock()
+    fake_image = Image.new("RGB", (64, 64))
+    client.text_to_image.return_value = fake_image
+    output = tmp_path / "generated_image"
+
+    generate_image(client, "a prompt", "model/id", output_path=output)
+
+    assert (tmp_path / "generated_image.png").exists()

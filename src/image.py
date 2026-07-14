@@ -44,6 +44,9 @@ def generate_image(
     )
 
     if output_path:
-        image.save(output_path)
+        path = Path(output_path)
+        if not path.suffix:
+            path = path.with_suffix(".png")
+        image.save(path)
 
     return image
