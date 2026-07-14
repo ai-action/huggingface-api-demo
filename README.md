@@ -31,7 +31,7 @@ uv run pre-commit install
 
 ## Usage
 
-Set your Hugging Face token as an environment variable:
+Set your [Hugging Face token](https://huggingface.co/settings/tokens) as an environment variable:
 
 ```sh
 export HF_TOKEN=<your_huggingface_token>
