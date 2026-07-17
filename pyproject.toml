@@ -11,7 +11,7 @@ dependencies = [
 lint = [
     "pre-commit==4.6.0",
     "pyright==1.1.411",
-    "ruff==0.15.21",
+    "ruff==0.15.22",
 ]
 test = [
     "coverage==7.15.2",
