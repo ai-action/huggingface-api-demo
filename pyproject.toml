@@ -3,7 +3,7 @@ name = "huggingface-api-demo"
 version = "0.0.0"
 requires-python = ">=3.10"
 dependencies = [
-    "huggingface_hub>=0.30.0",
+    "huggingface_hub>=1.24.0",
     "Pillow>=10.0.0",
 ]
 
